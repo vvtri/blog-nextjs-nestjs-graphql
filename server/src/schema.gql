@@ -1,0 +1,94 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthTokenModel {
+  accessToken: String!
+  refreshToken: String
+}
+
+type UserModel {
+  id: Float!
+  email: String!
+  avatarId: Float
+  avatar: FileModel!
+}
+
+type FileModel {
+  id: Float!
+  url: String!
+  mimetype: String!
+  publicId: String!
+  userId: Float!
+  user: UserModel!
+}
+
+type PaginationLinksModel {
+  first: String
+  previous: String
+  next: String
+  last: String
+}
+
+type PaginationMetaModel {
+  itemCount: Float!
+  totalItems: Float!
+  itemsPerPage: Float!
+  totalPages: Float!
+  currentPage: Float!
+}
+
+type PostModel {
+  id: Float!
+  title: String!
+  content: String!
+  userId: Float!
+  user: UserModel!
+}
+
+type PaginationPostModel {
+  items: [PostModel!]!
+  meta: PaginationMetaModel!
+  links: PaginationLinksModel
+}
+
+type Query {
+  hello: String!
+  getMyInfo: UserModel!
+  paginationPost(input: PaginationPostInput!): PaginationPostModel!
+  post(id: Float!): PostModel!
+}
+
+input PaginationPostInput {
+  searchText: String
+}
+
+type Mutation {
+  register(input: RegisterInput!): AuthTokenModel!
+  login(input: LoginInput!): AuthTokenModel!
+  updateUser(input: UpdateUserInput!): UserModel!
+  createPost(input: CreatePostInput!): PostModel!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  avatar: Upload
+  name: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreatePostInput {
+  title: String!
+  content: String!
+}
