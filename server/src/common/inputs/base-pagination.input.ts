@@ -1,6 +1,7 @@
 import { InputType, ObjectType } from '@nestjs/graphql';
 
-export abstract class PaginationBaseInput {
-  page?: number = 10;
+@InputType()
+export class PaginationBaseInput {
+  page?: number = 1;
   limit?: number = 10;
 }

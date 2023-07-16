@@ -5,7 +5,8 @@ import { User } from '../../auth/entities/user.entity';
 import { BaseEntity } from '../../common/entities/base.entity';
 
 @Entity()
-export class File {
+@ObjectType()
+export class File extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,7 +20,7 @@ export class File {
   publicId: string;
 
   @OneToOne(() => User, (u) => u.avatar)
-  userAvatar: User;
+  userAvatar?: User;
 
   // Join user
   @Column()

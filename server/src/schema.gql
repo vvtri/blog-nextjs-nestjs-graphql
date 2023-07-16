@@ -2,25 +2,49 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AuthTokenModel {
-  accessToken: String!
-  refreshToken: String
-}
-
-type UserModel {
+type Comment {
   id: Float!
-  email: String!
-  avatarId: Float
-  avatar: FileModel!
-}
-
-type FileModel {
-  id: Float!
-  url: String!
-  mimetype: String!
-  publicId: String!
+  content: String!
   userId: Float!
-  user: UserModel!
+  user: User!
+  postId: Float!
+  post: Post!
+}
+
+type Post {
+  id: Float!
+  title: String!
+  content: String!
+  userId: Float!
+  user: User!
+  paginationComments(input: PaginationBaseInput!): PaginationCommentModel!
+}
+
+input PaginationBaseInput {
+  page: Float = 1
+  limit: Float = 10
+}
+
+type File {
+  id: Float!
+  mimetype: String!
+  url: String!
+  publicId: String!
+  userAvatar: User
+  userId: Float!
+  user: User!
+}
+
+type User {
+  id: Int!
+  avatarId: Int
+  avatar: File
+  email: String!
+  name: String
+  posts: [Post!]!
+  comments: [Comment!]!
+  paginationPosts(input: PaginationBaseInput!): PaginationPostModel!
+  paginationComments(input: PaginationBaseInput!): PaginationCommentModel!
 }
 
 type PaginationLinksModel {
@@ -38,36 +62,53 @@ type PaginationMetaModel {
   currentPage: Float!
 }
 
-type PostModel {
-  id: Float!
-  title: String!
-  content: String!
-  userId: Float!
-  user: UserModel!
-}
-
-type PaginationPostModel {
-  items: [PostModel!]!
+type PaginationCommentModel {
+  items: [Comment!]!
   meta: PaginationMetaModel!
   links: PaginationLinksModel
 }
 
+type PaginationPostModel {
+  items: [Post!]!
+  meta: PaginationMetaModel!
+  links: PaginationLinksModel
+}
+
+type AuthTokenModel {
+  accessToken: String!
+  refreshToken: String
+}
+
 type Query {
   hello: String!
-  getMyInfo: UserModel!
+  getMyInfo: User!
   paginationPost(input: PaginationPostInput!): PaginationPostModel!
-  post(id: Float!): PostModel!
+  post(id: Float!): Post!
+  paginationComment(input: PaginationCommentInput!): PaginationCommentModel!
+  comment(id: Float!): Comment!
 }
 
 input PaginationPostInput {
+  page: Float = 1
+  limit: Float = 10
   searchText: String
+  userId: Float
+}
+
+input PaginationCommentInput {
+  page: Float = 1
+  limit: Float = 10
+  searchText: String
+  postId: Float
+  userId: Float
 }
 
 type Mutation {
   register(input: RegisterInput!): AuthTokenModel!
   login(input: LoginInput!): AuthTokenModel!
-  updateUser(input: UpdateUserInput!): UserModel!
-  createPost(input: CreatePostInput!): PostModel!
+  updateUser(input: UpdateUserInput!): User!
+  createPost(input: CreatePostInput!): Post!
+  createComment(input: CreateCommentInput!): Comment!
 }
 
 input RegisterInput {
@@ -91,4 +132,9 @@ scalar Upload
 input CreatePostInput {
   title: String!
   content: String!
+}
+
+input CreateCommentInput {
+  content: String!
+  postId: Float!
 }

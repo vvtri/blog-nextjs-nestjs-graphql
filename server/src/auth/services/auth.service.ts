@@ -2,7 +2,6 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { Transactional } from 'typeorm-transactional';
 import bcrypt from 'bcryptjs';
-import { UserModel } from '../models/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from '../types/jwt-payload.type';
 import { ConfigService } from '@nestjs/config';

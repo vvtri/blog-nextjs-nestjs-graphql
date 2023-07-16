@@ -1,3 +1,4 @@
+import { HideField, ObjectType } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,9 +9,12 @@ import {
 } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
 import { Comment } from '../../comment/entities/comment.entity';
+import { PaginationCommentModel } from '../../comment/models/pagination-comment.model';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Entity()
-export class Post {
+@ObjectType()
+export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -30,5 +34,6 @@ export class Post {
   // end join user
 
   @OneToMany(() => Comment, (c) => c.post)
+  @HideField()
   comments: Comment[];
 }

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { FileModel } from '../file/dtos/models/file.model';
+import { CommentModule } from '../comment/comment.module';
 import { FileModule } from '../file/file.module';
 import { FileRepository } from '../file/repositories/file.repository';
+import { PostModule } from '../post/post.module';
 import { TypeOrmCustomModule } from '../typeorm-custom/typeorm-custom.module';
 import { JwtAuthenUserGuard } from './guards/jwt-authen-user.guard';
 import { UserRepository } from './repositories/user.repository';
@@ -15,6 +16,8 @@ import { JwtAuthenUserStrategy } from './strategies/jwt-authen.strategy';
   imports: [
     TypeOrmCustomModule.forFeature([UserRepository, FileRepository]),
     FileModule,
+    PostModule,
+    CommentModule,
   ],
   providers: [
     JwtAuthenUserStrategy,
@@ -26,6 +29,6 @@ import { JwtAuthenUserStrategy } from './strategies/jwt-authen.strategy';
     AuthService,
     UserService,
   ],
-  exports: [],
+  exports: [UserService],
 })
 export class AuthModule {}

@@ -7,6 +7,8 @@ import cloudinary from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from '../../common/configs/app.config';
 import { Stream } from 'stream';
+import { In } from 'typeorm';
+import { File } from '../entities/file.entity';
 
 @Injectable()
 export class FileService {
@@ -36,6 +38,21 @@ export class FileService {
 
     await this.fileRepo.save(file);
     return file;
+  }
+
+  @Transactional()
+  async getByIds(fileIds: readonly number[]) {
+    const files = await this.fileRepo.find({
+      where: { id: In(fileIds) },
+    });
+
+    const mapFileIdToFile: Record<number, File> = {};
+
+    for (const file of files) {
+      mapFileIdToFile[file.id] = file;
+    }
+
+    return fileIds.map((item) => mapFileIdToFile[item]);
   }
 
   @Transactional()

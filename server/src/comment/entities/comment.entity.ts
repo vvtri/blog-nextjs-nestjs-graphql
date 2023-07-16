@@ -1,3 +1,4 @@
+import { ObjectType } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,10 +7,12 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
+import { BaseEntity } from '../../common/entities/base.entity';
 import { Post } from '../../post/entities/post.entity';
 
 @Entity()
-export class Comment {
+@ObjectType()
+export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

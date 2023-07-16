@@ -20,17 +20,27 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import appConfig from './common/configs/app.config';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_PIPE, ModuleRef } from '@nestjs/core';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
+import { DataLoaderModule } from './data-loader/data-loader.module';
+import { DataLoaderService } from './data-loader/services/data-loader.service';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      imports: [DataLoaderModule],
+      inject: [DataLoaderService],
+      useFactory: async (dataLoaderService: DataLoaderService) => {
+        return {
+          autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
+          playground: false,
+          plugins: [ApolloServerPluginLandingPageLocalDefault()],
+          context: { loaders: dataLoaderService.getLoaders() },
+        };
+      },
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({} as any),
@@ -47,7 +57,8 @@ import { PostModule } from './post/post.module';
     JwtModule.register({ global: true }),
 
     AuthModule,
-    PostModule
+    PostModule,
+    CommentModule,
   ],
   providers: [
     {
